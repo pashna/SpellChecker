@@ -1,14 +1,17 @@
 from Engine.FuzzySearch import Trie
 from Engine.LanguageModel import LanguageModel
-from Engine.utils.utils import save_obj, load_obj
+from Engine.utils.utils import save_obj
+import sys
 
 if __name__ == "__main__":
-    PATH = "data/middle.txt"
+    sys.setrecursionlimit(50000)
 
-    trie = Trie(PATH)
-    save_obj(trie, "Trie")
-    trie = None
+    #PATH = "data/queries_all.txt"
+    PATH = "queries_all.txt"
 
     lm = LanguageModel(PATH)
     save_obj(lm, "LanguageModel")
-    lm = None
+
+    trie = Trie(lm.dict.keys())
+    save_obj(trie, "Trie")
+    trie = None

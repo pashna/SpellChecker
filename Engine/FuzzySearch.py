@@ -1,36 +1,22 @@
 # coding: utf-8
 #!/usr/bin/python
-
-import time
-
-DICTIONARY = "/usr/share/dict/words";
-TARGET = "погода"
-MAX_COST = 1
-
+import re
 
 class Trie:
 
-    def __init__(self, FILE_PATH):
+    def __init__(self, words):
         self.trie = TrieNode()
-        self.__read(FILE_PATH)
+        self.__regex = re.compile(r"[\w\d]+")
+        self.__read(words)
 
 
-    def __read(self, FILE_PATH):
-        with open(FILE_PATH) as f:
-            content = f.readlines()
+    def __read(self, words):
 
-        for line in content:
-            line = line.lower()
-            line = line[:-1]
-            index = line.find('\t')
-            if index > 0:
-                line = line[index+1:]
-
-            for word in line.split(' '):
-                self.trie.insert( word )
+        for word in words:
+            self.trie.insert( word )
 
 
-    def search(self, word, maxCost ):
+    def search(self, word, maxCost=1 ):
 
         currentRow = range( len(word) + 1 )
         results = []
@@ -47,18 +33,18 @@ class Trie:
         currentRow = [ previousRow[0] + 1 ]
 
         for column in xrange( 1, columns ):
-            insertCost = currentRow[column - 1] + 1
-            deleteCost = previousRow[column] + 1
+            insertCost = currentRow[column - 1] + 0.5
+            deleteCost = previousRow[column] + 0.4
 
             if word[column - 1] != letter:
-                replaceCost = previousRow[ column - 1 ] + 1
+                replaceCost = previousRow[ column - 1 ] + 0.6
             else:
                 replaceCost = previousRow[ column - 1 ]
 
             currentRow.append( min( insertCost, deleteCost, replaceCost ) )
 
         if currentRow[-1] <= maxCost and node.word != None:
-            results.append( (node.word, currentRow[-1] ) )
+            results.append( [node.word, currentRow[-1] ] )
 
         if min( currentRow ) <= maxCost:
             for letter in node.children:

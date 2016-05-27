@@ -1,12 +1,14 @@
 # coding: utf-8
 
+import re
+import copy
 class LanguageModel:
 
     def __init__(self, FILE_PATH):
         self.dict = {}
         self.__count_of_word = 0.
+        self._regex = re.compile(r"\w+")
         self.__read(FILE_PATH)
-        # TODO: Потом пройтись и перейти к вероятностям, или с делением норм?
 
 
     def __read(self, file):
@@ -15,13 +17,16 @@ class LanguageModel:
             content = f.readlines()
 
         for line in content:
+            w = copy.copy(line)
+            line=line.decode("utf-8")
             line = line.lower()
             line = line[:-1]
             index = line.find('\t')
             if index > 0:
                 line = line[index+1:]
 
-            for word in line.split(' '):
+            for word in re.findall(ur"(?u)\w+", line):
+
                 if self.dict.has_key(word):
                     self.dict[word] += 1
                 else:
@@ -46,8 +51,3 @@ class LanguageModel:
             prob *= self.__get_word_prob(w)
 
         return prob
-
-"""
-lm = LanguageModel("../data/small.txt")
-print lm.get_prob(["секс", "анимированный"])
-"""
