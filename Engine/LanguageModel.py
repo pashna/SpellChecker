@@ -1,21 +1,21 @@
 # coding: utf-8
 
-
 class LanguageModel:
 
     def __init__(self, FILE_PATH):
-        self.file = FILE_PATH
         self.dict = {}
         self.__count_of_word = 0.
-        self.__read()
+        self.__read(FILE_PATH)
         # TODO: Потом пройтись и перейти к вероятностям, или с делением норм?
 
-    def __read(self):
 
-        with open(self.file) as f:
+    def __read(self, file):
+
+        with open(file) as f:
             content = f.readlines()
 
         for line in content:
+            line = line.lower()
             line = line[:-1]
             index = line.find('\t')
             if index > 0:
@@ -36,6 +36,7 @@ class LanguageModel:
         else:
             return 0.
 
+
     def get_prob(self, query):
         """
         :param query: list
@@ -46,7 +47,7 @@ class LanguageModel:
 
         return prob
 
-
+"""
 lm = LanguageModel("../data/small.txt")
 print lm.get_prob(["секс", "анимированный"])
-
+"""

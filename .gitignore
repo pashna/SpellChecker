@@ -61,5 +61,6 @@ idea*
 .idea/*
 .ipynb_checkpoints*
 *data*
+*/objects*
 *.gz
 *.pkl
