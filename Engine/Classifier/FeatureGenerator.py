@@ -1,0 +1,59 @@
+# coding: utf-8
+import re
+from langdetect import detect
+
+class FeatureGenerator:
+
+    def __init__(self, lm):
+        self.lm = lm
+
+    def generate_features(self, query, words):
+        """
+        :param query: str
+        :param words: list
+        :return:
+        """
+        x = []
+        #words = re.findall(ur"(?u)\w+", query)
+        x.append(len(words))# количество слов
+        x.append(len(query))# количество символов
+        x.append(self.lm.get_prob(words)) # вероятность такого запроса
+        max_prob = -1.
+        min_prob = 2.
+
+        count_of_words_in_dict = 0
+        for word in words:
+            prob = self.lm.get_word_prob(word)
+            if prob > max_prob:
+                max_prob = prob
+            if prob < min_prob:
+                min_prob = prob
+
+            if self.lm.dict.has_key(word):
+                count_of_words_in_dict += 1
+
+        x.append(max_prob) # максимальная вероятность слова
+        x.append(min_prob) # минимальная вероятность слова
+        x.append(len(words)-count_of_words_in_dict) # сколько слов нет в словаре
+
+        if u"," in query or \
+            u"." in query or \
+            u"'" in query or \
+            u";" in query or \
+            u"]" in query or \
+            u"[" in query or \
+            u"~" in query:
+            x.append(1) # есть ли "плохие" символы в запросе
+        else:
+            x.append(0)
+
+        try:
+            lang = detect(query)
+            lang = 1 if lang == 'en' else 0
+        except Exception:
+            lang = 0
+
+        x.append(lang) # язык
+
+
+        return x

@@ -7,7 +7,7 @@ from Engine.utils.utils import save_obj
 if __name__ == "__main__":
     sys.setrecursionlimit(50000)
 
-    #PATH = "data/queries_all.txt"
+    #PATH = "data/middle.txt"
     PATH = "queries_all.txt"
 
     lm = LanguageModel(PATH)
