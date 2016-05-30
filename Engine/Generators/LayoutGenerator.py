@@ -10,7 +10,7 @@ u'т': u'n', u'ь': u'm', u'б': u',', u'ю': u'.', u'q': u'й', u'w': u'ц', u'
 u'r': u'к', u't': u'е', u'y': u'н', u'u': u'г', u'i': u'ш', u'o': u'щ', u'p': u'з',
 u'[': u'х', u']': u'ъ', u'a': u'ф', u's': u'ы', u'd': u'в', u'f': u'а', u'g': u'п',
 u'h': u'р', u'j': u'о', u'k': u'л', u'l': u'д', u';': u'ж', u"'": u'э', u'z': u'я',
-u'x': u'ч', u'c': u'с', u'v': u'м', u'b': u'и', u'n': u'т', u'm': u'ь', u',': u'б', u'.': u'ю'
+u'x': u'ч', u'c': u'с', u'v': u'м', u'b': u'и', u'n': u'т', u'm': u'ь', u',': u'б', u'.': u'ю',
 }
 
     def __init__(self):
@@ -20,7 +20,10 @@ u'x': u'ч', u'c': u'с', u'v': u'м', u'b': u'и', u'n': u'т', u'm': u'ь', u'
     def change_layour(self, word):
         new_word = u""
         for w in word:
-            new_word += LayoutGenerator.keybord[w]
+            try:
+                new_word += LayoutGenerator.keybord[w]
+            except Exception:
+                new_word += w
         return new_word
 
 

@@ -3,9 +3,9 @@ from Engine.utils.utils import load_obj
 from Engine.ErrorModel import ErrorModel
 from Engine.CorrectionSelector import CorrectionSelector
 from Engine.TextFormatter import TextFormatter
-from Engine.Classifiers.QueryClassifier import QueryClassifier
+from Engine.Classifier.QueryClassifier import QueryClassifier
 from Engine.Generators.LayoutGenerator import LayoutGenerator
-
+from Engine.Generators.SplitGenerator import SplitGenerator
 
 if __name__ == "__main__":
 
@@ -15,6 +15,7 @@ if __name__ == "__main__":
     qc = QueryClassifier(cl, lm)
 
     layoutGenerator = LayoutGenerator()
+    splitGenerator = SplitGenerator()
 
     cs = CorrectionSelector(em, lm)
 
@@ -28,18 +29,31 @@ if __name__ == "__main__":
             print query.encode("utf-8")
 
         else:
+            isFixed = False
+            # =============================== Layout
+            if not isFixed:
+                keybordChangedWords = layoutGenerator.generate_correction(words)
+                queryKeybord = textFormatter.format_text(keybordChangedWords)
+                if qc.is_correct(queryKeybord, keybordChangedWords):
+                    print queryKeybord.encode("utf-8")
+                    isFixed = True
 
-            keybordChangedWords = layoutGenerator.generate_correction(words)
-            queryKeybord = textFormatter.format_text(keybordChangedWords)
-            if qc.is_correct(queryKeybord, keybordChangedWords):
-                print queryKeybord.encode("utf-8")
-                continue
+            # ================================ Split
+            if not isFixed:
+                splits = splitGenerator.generate_splits(words)
+                for split in splits:
+                    querySplit = u" ".join(split)
+                    if qc.is_correct(querySplit, split):
+                        print querySplit.encode("utf-8")
+                        isFixed = True
 
+            # ================================= Grammar
+            if not isFixed:
+                for i in range(len(words)):
+                    word = words[i]
+                    if not lm.dict.has_key(word):
+                        words = cs.fix(words, i)
 
-            for i in range(len(words)):
-                word = words[i]
-                if not lm.dict.has_key(word):
-                    words = cs.fix(words, i)
-
-            text = textFormatter.format_text(words)
-            print text.encode("utf-8")
+                text = textFormatter.format_text(words)
+                print text.encode("utf-8")
+                isFixed = True
