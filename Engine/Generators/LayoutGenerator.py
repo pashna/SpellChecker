@@ -15,6 +15,7 @@ u'x': u'ч', u'c': u'с', u'v': u'м', u'b': u'и', u'n': u'т', u'm': u'ь', u'
 
     def __init__(self):
         pass
+    #TODO: +ОТДЕЛЬНЫЕ СЛОВА
 
 
     def change_layour(self, word):
