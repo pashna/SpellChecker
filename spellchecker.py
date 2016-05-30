@@ -6,6 +6,7 @@ from Engine.TextFormatter import TextFormatter
 from Engine.Classifier.QueryClassifier import QueryClassifier
 from Engine.Generators.LayoutGenerator import LayoutGenerator
 from Engine.Generators.SplitGenerator import SplitGenerator
+from Engine.Generators.JoinGenerator import JoinGenerator
 
 if __name__ == "__main__":
 
@@ -16,6 +17,7 @@ if __name__ == "__main__":
 
     layoutGenerator = LayoutGenerator()
     splitGenerator = SplitGenerator()
+    joinGenerator = JoinGenerator()
 
     cs = CorrectionSelector(em, lm)
 
@@ -38,6 +40,17 @@ if __name__ == "__main__":
                     print queryKeybord.encode("utf-8")
                     isFixed = True
 
+            # ================================ Join
+            if not isFixed:
+                joins = joinGenerator.generate_joins(words)
+                for join in joins:
+                    queryJoin = u" ".join(join)
+                    if qc.is_correct(queryJoin, join):
+                        print queryJoin.encode("utf-8")
+                        isFixed = True
+                        break
+
+
             # ================================ Split
             if not isFixed:
                 splits = splitGenerator.generate_splits(words)
@@ -46,6 +59,7 @@ if __name__ == "__main__":
                     if qc.is_correct(querySplit, split):
                         print querySplit.encode("utf-8")
                         isFixed = True
+                        break
 
             # ================================= Grammar
             if not isFixed:
