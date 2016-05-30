@@ -33,11 +33,11 @@ class Trie:
         currentRow = [ previousRow[0] + 1 ]
 
         for column in xrange( 1, columns ):
-            insertCost = currentRow[column - 1] + 0.5
-            deleteCost = previousRow[column] + 0.4
+            insertCost = currentRow[column - 1] + 1
+            deleteCost = previousRow[column] + 1
 
             if word[column - 1] != letter:
-                replaceCost = previousRow[ column - 1 ] + 0.6
+                replaceCost = previousRow[ column - 1 ] + 1
             else:
                 replaceCost = previousRow[ column - 1 ]
 
