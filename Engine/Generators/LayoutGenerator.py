@@ -24,10 +24,14 @@ u'x': u'ч', u'c': u'с', u'v': u'м', u'b': u'и', u'n': u'т', u'm': u'ь', u'
         return new_word
 
 
-    def generate_correction(self, query):
+    def generate_correction(self, words):
         """
-        :param query: list
+        :param query: str
         """
+        query = []
+        for w in words:
+            query.append(self.change_layour(w))
+        return query
 
 
 """
@@ -44,4 +48,4 @@ for i in range(len(b)):
 print u"}"
 """
 
-print LayoutGenerator().change_layour("ghbdtn")
+#print LayoutGenerator().change_layour("ghbdtn")

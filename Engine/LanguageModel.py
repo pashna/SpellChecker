@@ -1,7 +1,6 @@
 # coding: utf-8
 import re
-import copy
-from math import log
+
 
 class LanguageModel:
 
@@ -76,6 +75,7 @@ class LanguageModel:
 
         except Exception:
             return 1e-12
+
 
     def get_prob(self, query):
         """
