@@ -1,7 +1,6 @@
 # coding: utf-8
 import re
 
-
 class LanguageModel:
 
     def __init__(self, FILE_PATH):

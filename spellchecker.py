@@ -1,14 +1,15 @@
 import sys
-from Engine.utils.utils import load_obj, print_error
-from Engine.ErrorModel import ErrorModel
-from Engine.CorrectionSelector import CorrectionSelector
-from Engine.TextFormatter import TextFormatter
+from copy import copy
+from time import time
+
 from Engine.Classifier.QueryClassifier import QueryClassifier
+from Engine.ErrorModel import ErrorModel
+from Engine.Generators.GrammarGenerator import GrammarGenerator
+from Engine.Generators.JoinGenerator import JoinGenerator
 from Engine.Generators.LayoutGenerator import LayoutGenerator
 from Engine.Generators.SplitGenerator import SplitGenerator
-from Engine.Generators.JoinGenerator import JoinGenerator
-from time import time
-from copy import copy
+from Engine.TextFormatter import TextFormatter
+from Engine.utils.utils import load_obj, print_error
 
 if __name__ == "__main__":
 
@@ -20,10 +21,11 @@ if __name__ == "__main__":
     layoutGenerator = LayoutGenerator()
     splitGenerator = SplitGenerator()
     joinGenerator = JoinGenerator()
-    cs = CorrectionSelector(em, lm)
+    grammarGenerator = GrammarGenerator(em, lm)
 
     i = 0
     for s in sys.stdin:
+        t1 = time()
         i+=1
         textFormatter = TextFormatter(s)
         words = textFormatter.get_query_list()
@@ -46,16 +48,23 @@ if __name__ == "__main__":
 
 
             # ================================= Grammar
+            grammas = grammarGenerator.generate_correction(words)
+            for gramma in grammas:
+                queryGramma = textFormatter.format_text(gramma)
+                if qc.is_correct(gramma, gramma):
+                    correction.append(queryGramma.encode("utf-8"))
+                    probs.append(lm.get_prob(gramma))
+            """
             grammarWords = copy(words)
             for i in range(len(grammarWords)):
                 word = grammarWords[i]
                 if not lm.dict.has_key(word):
-                    grammarWords = cs.fix(grammarWords, i)
+                    grammarWords = grammarGenerator.fix(grammarWords, i)
                     queryGrammar = textFormatter.format_text(grammarWords)
                     if qc.is_correct(queryGrammar, grammarWords):
                         correction.append(queryGrammar.encode("utf-8"))
                         probs.append(lm.get_prob(grammarWords))
-
+            """
 
             # ================================ Join
             joins = joinGenerator.generate_joins(words)
@@ -76,5 +85,12 @@ if __name__ == "__main__":
 
             if len(correction) == 0:
                 print query.encode("utf-8")
+                print_error("{} \t {}".format(query.encode("utf-8"), "not found=("))
             else:
                 print correction[probs.index(max(probs))]
+                print_error("{} \t {}".format(query.encode("utf-8"), correction[probs.index(max(probs))]))
+
+        """
+        t2 = time()
+        print "time = {}".format(t2-t1)
+        """

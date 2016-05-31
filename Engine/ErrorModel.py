@@ -4,9 +4,10 @@ class ErrorModel:
         self.fuzzy_searcher = fuzzy_searcher
         self.alpha = 1.5
 
-    def get_correction(self, word):
-        correction = self.fuzzy_searcher.search(word, 1)
+    def get_correction(self, word, max_lev):
+        correction = self.fuzzy_searcher.search(word, max_lev)
+        """
         for i in range(len(correction)):
-            correction[i][1] = self.alpha**(-correction[i][1])
-
+            correction[i][1] = -correction[i][1]#self.alpha**(-correction[i][1])
+        """
         return correction

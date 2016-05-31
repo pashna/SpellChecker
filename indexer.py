@@ -1,6 +1,6 @@
 import sys
 
-from Engine.Generators.FuzzySearchGenerator import Trie
+from Engine.Generators.FuzzySearcher import Trie
 from Engine.LanguageModel import LanguageModel
 from Engine.utils.utils import save_obj
 
