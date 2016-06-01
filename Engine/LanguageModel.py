@@ -74,7 +74,7 @@ class LanguageModel:
             return self.dict[w1]["freq"] * w2_prob
 
         except Exception:
-            return 1e-16
+            return 1e-40
 
 
     def get_prob(self, query):
@@ -83,7 +83,10 @@ class LanguageModel:
         """
         if len(query) == 0:
             return 0.
-        prob = 1
+        if len(query) == 1 and not self.dict.has_key(query[-1]):
+            return 0.
+
+        prob = 1.
         for i in range(len(query)-1):
             w1 = query[i]
             w2 = query[i+1]

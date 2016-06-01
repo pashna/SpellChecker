@@ -1,6 +1,7 @@
 # coding: utf-8
 from copy import copy
 import itertools
+from time import time
 
 class GrammarGenerator:
 
@@ -21,25 +22,30 @@ class GrammarGenerator:
         :return:
         """
         decart_of_correction = []
-        grammarWords = copy(words)
-        for i in range(len(grammarWords)):
-            word = grammarWords[i]
+
+        for i in range(len(words)):
+            word = words[i]
             decart_of_correction.append([])
 
             if self.lm.dict.has_key(word):
                 decart_of_correction[i].append(word)
                 continue
-            word_correction = self.em.get_correction(word, max_lev=2)
-            word_correction = sorted(word_correction, key=lambda tup: tup[1])
+            t = time()
+            word_correction = self.em.get_correction(word, max_lev=1)
+            #print "{} get_correction".format(time()-t)
 
-            for w, lev in word_correction[:3]:
+
+            #word_correction = sorted(word_correction, key=lambda tup: tup[1])
+            for w, lev in word_correction:
                 decart_of_correction[-1].append(w)
 
             if self.lm.dict.has_key(word) or len(decart_of_correction[i]) == 0:
                 #если слово есть в словаре или не нашлось близких к нему добавим изначальное слово
                 decart_of_correction[i].append(word)
 
+        t = time()
         correction = itertools.product(*decart_of_correction)
+        #print "{} product".format(time() - t)
         return correction
 
 

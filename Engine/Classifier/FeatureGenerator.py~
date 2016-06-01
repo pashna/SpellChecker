@@ -47,12 +47,12 @@ class FeatureGenerator:
             x.append(1) # есть ли "плохие" символы в запросе
         else:
             x.append(0)
-	"""
+
         if self.__en_regex.findall(query):
             lang = 1
         else:
             lang = 0
 
 	x.append(lang)
-	"""
+
         return x

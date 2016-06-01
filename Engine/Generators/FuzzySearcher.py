@@ -16,18 +16,18 @@ class Trie:
             self.trie.insert( word )
 
 
-    def search(self, word, maxCost=1 ):
+    def search(self, word, max_lev):
 
         currentRow = range( len(word) + 1 )
         results = []
 
         for letter in self.trie.children:
-            self.searchRecursive( self.trie.children[letter], letter, word, currentRow, results, maxCost )
+            self.searchRecursive(self.trie.children[letter], letter, word, currentRow, results, max_lev)
 
         return results
 
 
-    def searchRecursive(self, node, letter, word, previousRow, results, maxCost ):
+    def searchRecursive(self, node, letter, word, previousRow, results, max_lev):
 
         columns = len( word ) + 1
         currentRow = [ previousRow[0] + 1 ]
@@ -43,12 +43,13 @@ class Trie:
 
             currentRow.append( min( insertCost, deleteCost, replaceCost ) )
 
-        if currentRow[-1] <= maxCost and node.word != None:
+
+        if currentRow[-1] <= max_lev and node.word != None:
             results.append( [node.word, currentRow[-1] ] )
 
-        if min( currentRow ) <= maxCost:
+        if min( currentRow ) <= max_lev:
             for letter in node.children:
-                self.searchRecursive( node.children[letter], letter, word, currentRow, results, maxCost )
+                self.searchRecursive(node.children[letter], letter, word, currentRow, results, max_lev)
 
 
 class TrieNode:

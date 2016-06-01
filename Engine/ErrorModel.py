@@ -6,8 +6,8 @@ class ErrorModel:
 
     def get_correction(self, word, max_lev):
         correction = self.fuzzy_searcher.search(word, max_lev)
-        """
+
         for i in range(len(correction)):
-            correction[i][1] = -correction[i][1]#self.alpha**(-correction[i][1])
-        """
+            correction[i][1] = self.alpha**(-correction[i][1])
+
         return correction
