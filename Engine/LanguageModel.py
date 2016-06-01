@@ -1,5 +1,6 @@
 # coding: utf-8
 import re
+from math import sqrt
 
 class LanguageModel:
 
@@ -73,7 +74,7 @@ class LanguageModel:
             return self.dict[w1]["freq"] * w2_prob
 
         except Exception:
-            return 1e-12
+            return 1e-16
 
 
     def get_prob(self, query):
@@ -91,7 +92,7 @@ class LanguageModel:
         if self.dict.has_key(query[-1]):
             prob *= self.dict[query[-1]]["freq"]
 
-        return prob
+        return prob*len(query)
 
 
     def get_word_prob(self, word):

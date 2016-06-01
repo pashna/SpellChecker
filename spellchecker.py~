@@ -15,12 +15,11 @@ if __name__ == "__main__":
 
     lm = load_obj("LanguageModel")
     em = ErrorModel(load_obj("Trie"))
-    qc_input = QueryClassifier(load_obj("classifier_input"), lm)
-    qc = QueryClassifier(load_obj("classifier"), lm)
-
+    cl = load_obj("classifier")
+    qc = QueryClassifier(cl, lm)
 
     layoutGenerator = LayoutGenerator()
-    splitGenerator = SplitGenerator(lm)
+    splitGenerator = SplitGenerator()
     joinGenerator = JoinGenerator()
     grammarGenerator = GrammarGenerator(em, lm)
 
@@ -31,12 +30,13 @@ if __name__ == "__main__":
         textFormatter = TextFormatter(s)
         words = textFormatter.get_query_list()
         query = textFormatter.text
-        #print query.encode("utf-8")
-        #print_error(s)
-
-        if qc_input.is_correct(query, words):
-            print "OK"
+        print query.encode("utf-8")
+        print_error(s)
+        """
+        if qc.is_correct(query, words):
             print query.encode("utf-8")
+            #print_error("CORRECT")#.format(query.encode("utf-8"), correction[probs.index(max(probs))]))
+            #print_error("{} \t OK".format(s))
         else:
             correction = []
             probs = []
@@ -45,53 +45,39 @@ if __name__ == "__main__":
             keybordChangedWords = layoutGenerator.generate_correction(words)
             queryKeybord = textFormatter.format_text(keybordChangedWords)
             if qc.is_correct(queryKeybord, keybordChangedWords):
-                correction.append(queryKeybord)
+                correction.append(queryKeybord.encode("utf-8"))
                 probs.append(lm.get_prob(keybordChangedWords))
 
 
             # ================================= Grammar
-            t1 = time()
             grammas = grammarGenerator.generate_correction(words)
-            print "{} generating gramma.".format(time()-t1)
-            t1 = time()
-            j = 0
             for gramma in grammas:
                 queryGramma = textFormatter.format_text(gramma)
-                j += 1
                 if qc.is_correct(queryGramma, gramma):
-                    correction.append(queryGramma)
+                    correction.append(queryGramma.encode("utf-8"))
                     probs.append(lm.get_prob(gramma))
-            print "{} checking gramma. LEN = {}".format(time()-t1, j)
-            print ""
+
             # ================================ Join
-            t1 = time()
             joins = joinGenerator.generate_joins(words)
-            print "{} generating joins.".format(time()-t1)
-            t1 = time()
             for join in joins:
                 queryJoin = u" ".join(join)
                 if qc.is_correct(queryJoin, join):
-                    correction.append(queryJoin)
+                    correction.append(queryJoin.encode("utf-8"))
                     probs.append(lm.get_prob(join))
-            print "{} checking joins. LEN = {}".format(time()-t1, len(joins))
+
 
             # ================================ Split
-            t1 = time()
             splits = splitGenerator.generate_splits(words)
-            print "{} generating splits.".format(time()-t1)
-            t1 = time()
             for split in splits:
                 querySplit = u" ".join(split)
                 if qc.is_correct(querySplit, split):
-                    correction.append(querySplit)
+                    correction.append(querySplit.encode("utf-8"))
                     probs.append(lm.get_prob(split))
-            print "{} checking splits. LEN = {}".format(time()-t1, len(splits))
 
             if len(correction) == 0:
-                print "not found"
                 print query.encode("utf-8")
                 #print_error("{} \t {}".format(query.encode("utf-8"), "not found=("))
             else:
-                print correction[probs.index(max(probs))].encode("utf-8")
+                print correction[probs.index(max(probs))]
                 #print_error("{} \t {}".format(query.encode("utf-8"), correction[probs.index(max(probs))]))
-
+        """

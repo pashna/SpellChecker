@@ -8,7 +8,7 @@ if __name__ == "__main__":
     sys.setrecursionlimit(50000)
 
     PATH = "data/middle.txt"
-    #PATH = "queries_all.txt"
+    #PATH = "data/queries_all.txt"
 
     lm = LanguageModel(PATH)
     save_obj(lm, "LanguageModel")
