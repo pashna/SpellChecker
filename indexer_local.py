@@ -15,8 +15,6 @@ if __name__ == "__main__":
     save_obj(lm, "LanguageModel")
 
     trie = Trie(lm.dict.keys())
-    #save_obj(trie, "Trie")
-    #trie = None
 
     em = ErrorModel(trie, PATH)
     save_obj(em, "ErrorModel")

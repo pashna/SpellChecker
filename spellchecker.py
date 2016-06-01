@@ -73,10 +73,10 @@ if __name__ == "__main__":
     grammarGenerator = GrammarGenerator(em, lm)
 
     for s in sys.stdin:
+        t = time()
         textFormatter = TextFormatter(s)
         words = textFormatter.get_query_list()
         query = textFormatter.text
-
         if qc.is_correct(query, words):
             print query.encode("utf-8")
 
@@ -104,3 +104,5 @@ if __name__ == "__main__":
 
             if not found:
                 print textFormatter.format_text(words).encode("utf-8")
+
+            #print "{} for {} iter".format(t-time(), MAX_ITER-iteration)

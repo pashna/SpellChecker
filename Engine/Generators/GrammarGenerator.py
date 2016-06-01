@@ -29,8 +29,8 @@ class GrammarGenerator:
             if self.lm.dict.has_key(word):
                 decart_of_correction[i].append(word)
                 continue
-            t = time()
-            word_correction = self.em.get_correction(word, max_lev=0.3)
+
+            word_correction = self.em.get_correction(word, max_lev=1)
 
             for w, lev in word_correction:
                 decart_of_correction[-1].append(w)

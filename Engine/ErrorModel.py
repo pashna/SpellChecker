@@ -83,7 +83,11 @@ class ErrorModel:
 
 
     def __weight_func(self, count):
-        return (0.65)**sqrt(count)
+        f = (0.65)**sqrt(count)
+        if f < 0.4:
+            return 0.4
+        else:
+            return f
 
 
     def get_weight(self, type, c1, c2=None):
