@@ -8,11 +8,11 @@ class LanguageModel:
         self.dict = {}
         self.__count_of_word = 0.
         self._regex = re.compile(r"\w+")
-        self.__fit(FILE_PATH)
+        self.__read(FILE_PATH)
         self.__normalize()
 
 
-    def __fit(self, file):
+    def __read(self, file):
 
         with open(file) as f:
             content = f.readlines()

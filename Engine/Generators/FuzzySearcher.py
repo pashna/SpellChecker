@@ -9,6 +9,8 @@ class Trie:
         self.__regex = re.compile(r"[\w\d]+")
         self.__read(words)
 
+    def set_em(self, em):
+        self.em = em
 
     def __read(self, words):
 
@@ -33,11 +35,11 @@ class Trie:
         currentRow = [ previousRow[0] + 1 ]
 
         for column in xrange( 1, columns ):
-            insertCost = currentRow[column - 1] + 1
-            deleteCost = previousRow[column] + 1
+            insertCost = currentRow[column - 1] + self.em.get_weight(u'insert', word[column-1])
+            deleteCost = previousRow[column] + self.em.get_weight(u'delete', word[column-1])
 
             if word[column - 1] != letter:
-                replaceCost = previousRow[ column - 1 ] + 1
+                replaceCost = previousRow[ column - 1 ] + self.em.get_weight(u'replace', word[column-1], letter)
             else:
                 replaceCost = previousRow[ column - 1 ]
 

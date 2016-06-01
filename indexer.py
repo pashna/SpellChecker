@@ -2,6 +2,7 @@ import sys
 
 from Engine.Generators.FuzzySearcher import Trie
 from Engine.LanguageModel import LanguageModel
+from Engine.ErrorModel import ErrorModel
 from Engine.utils.utils import save_obj
 
 if __name__ == "__main__":
@@ -15,5 +16,8 @@ if __name__ == "__main__":
 
 
     trie = Trie(lm.dict.keys())
-    save_obj(trie, "Trie")
+    #save_obj(trie, "Trie")
     trie = None
+
+    em = ErrorModel(trie, PATH)
+    save_obj(em, "ErrorModel")

@@ -63,8 +63,8 @@ if __name__ == "__main__":
     MAX_ITER = 2
 
     lm = load_obj("LanguageModel")
-    em = ErrorModel(load_obj("Trie"))
-    qc_input = QueryClassifier(load_obj("classifier_input"), lm)
+    em = load_obj("ErrorModel")
+    #qc_input = QueryClassifier(load_obj("classifier_input"), lm)
     qc = QueryClassifier(load_obj("classifier"), lm)
 
     layoutGenerator = LayoutGenerator()
@@ -77,8 +77,7 @@ if __name__ == "__main__":
         words = textFormatter.get_query_list()
         query = textFormatter.text
 
-
-        if qc_input.is_correct(query, words):
+        if qc.is_correct(query, words):
             print query.encode("utf-8")
 
         else:
@@ -99,10 +98,9 @@ if __name__ == "__main__":
                 else:
                     gen_prob = []
                     for g in all_generation:
-                        we = u" ".join(g)
-                        probsawwe = lm.get_prob(g)
                         gen_prob.append(lm.get_prob(g))
                     words = all_generation[gen_prob.index(max(gen_prob))]
+                    words = list(words)
 
             if not found:
                 print textFormatter.format_text(words).encode("utf-8")

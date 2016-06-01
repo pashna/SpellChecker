@@ -6,7 +6,6 @@ from time import time
 class GrammarGenerator:
 
     def __init__(self, em, lm):
-        # TODO: прекращать генерацию, если уже набралось достаточно кандидатов с меньшим Левинштейном
         """
         :param em: ErrorModel Object
         :param lm: LanguageModel Object
@@ -31,11 +30,8 @@ class GrammarGenerator:
                 decart_of_correction[i].append(word)
                 continue
             t = time()
-            word_correction = self.em.get_correction(word, max_lev=1)
-            #print "{} get_correction".format(time()-t)
+            word_correction = self.em.get_correction(word, max_lev=0.3)
 
-
-            #word_correction = sorted(word_correction, key=lambda tup: tup[1])
             for w, lev in word_correction:
                 decart_of_correction[-1].append(w)
 
@@ -43,9 +39,8 @@ class GrammarGenerator:
                 #если слово есть в словаре или не нашлось близких к нему добавим изначальное слово
                 decart_of_correction[i].append(word)
 
-        t = time()
         correction = itertools.product(*decart_of_correction)
-        #print "{} product".format(time() - t)
+
         return correction
 
 
